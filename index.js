@@ -14,19 +14,43 @@ app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 20
 app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (req, res) {
+app.get("/", (req, res)=> {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
+app.get("/api/hello",(req, res) => {
   res.json({greeting: 'hello API'});
 });
 
+const isInvalidDate = (date) =>   date.toUTCString() === "Invalid Date"
 
+app.get("/api/:date", (req,res)=>{
+
+  let date = new Date(req.params.date)
+  
+
+  if(isInvalidDate(date)){
+    date = new Date(+req.params.date)
+
+  }
+
+  let unixDate = date.getTime()
+  let utcDate = date.toUTCString()
+
+
+  res.json({unix: unixDate, utc: utcDate})
+})
+
+
+app.get('/api', (req,res)=>{
+  currentUnix  = new Date().getTime()
+  currentUTC = new Date().toUTCString()
+  res.json({unix: curentUnix,  utc: currentUTC})
+})
 
 // Listen on port set in environment variable or default to 3000
-var listener = app.listen(process.env.PORT || 3000, function () {
+var listener = app.listen(process.env.PORT || 3000,  ()=> {
   console.log('Your app is listening on port ' + listener.address().port);
 });
