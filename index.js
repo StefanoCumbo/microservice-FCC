@@ -36,6 +36,11 @@ app.get("/api/:date", (req,res)=>{
 
   }
 
+  if(isInvalidDate(date)){
+    res.json({error: "Invalid date"})
+    return;
+  }
+
   let unixDate = date.getTime()
   let utcDate = date.toUTCString()
 
